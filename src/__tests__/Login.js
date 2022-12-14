@@ -2,6 +2,7 @@
  * @jest-environment jsdom
  */
 
+import '@testing-library/jest-dom'
 import LoginUI from "../views/LoginUI";
 import Login from "../containers/Login.js";
 import { ROUTES } from "../constants/routes";
@@ -20,7 +21,6 @@ describe("Given that I am a user on login page", () => {
 
       const form = screen.getByTestId("form-employee");
       const handleSubmit = jest.fn((e) => e.preventDefault());
-
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
       expect(screen.getByTestId("form-employee")).toBeTruthy();
@@ -41,7 +41,6 @@ describe("Given that I am a user on login page", () => {
 
       const form = screen.getByTestId("form-employee");
       const handleSubmit = jest.fn((e) => e.preventDefault());
-
       form.addEventListener("submit", handleSubmit);
       fireEvent.submit(form);
       expect(screen.getByTestId("form-employee")).toBeTruthy();
