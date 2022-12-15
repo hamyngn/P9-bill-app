@@ -2,7 +2,7 @@ import { ROUTES_PATH } from '../constants/routes.js'
 import { formatDate, formatStatus } from "../app/format.js"
 import Logout from "./Logout.js"
 
-export default class {
+export default class Bills {
   constructor({ document, onNavigate, store, localStorage }) {
     this.document = document
     this.onNavigate = onNavigate
@@ -35,7 +35,6 @@ export default class {
       .then(snapshot => {
         const bills = snapshot
           .map(doc => {
-            console.log(new Date(doc.date))
             try {
               return {
                 ...doc,
@@ -53,7 +52,6 @@ export default class {
               }
             }
           })
-          .sort((a,b) => (new Date (a.date) - new Date (b.date)))
           console.log('length', bills.length)
         return bills
       })
