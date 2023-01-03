@@ -20,7 +20,7 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
-    if (fileName.includes('jpg')||fileName.includes('png')||fileName.includes('jpeg')){
+    if (fileName.includes('.jpg')||fileName.includes('.png')||fileName.includes('.jpeg')){
       return true;
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed." );
