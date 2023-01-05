@@ -6,6 +6,7 @@ import { screen, waitFor, fireEvent, userEvent } from "@testing-library/dom"
 import NewBillUI from "../views/NewBillUI.js"
 import NewBill from "../containers/NewBill.js"
 import {localStorageMock} from "../__mocks__/localStorage.js";
+import { bills } from "../fixtures/bills.js"
 
 jest.mock("../app/store", () => mockStore)
 describe("Given I am connected as an employee", () => {
@@ -31,17 +32,13 @@ describe("Given I am connected as an employee", () => {
       fireEvent.change(pct, { target: { value: "20" } });
       expect(pct.value).toBe("20");
       let file = new File([""], "chucknorris.png", { type: "image/png" });
-      // get the upload button
       let uploader = screen.getByTestId("file");
-      // simulate upload event and wait until finish
       await waitFor(() =>
         fireEvent.change(uploader, {
           target: { files: [file] },
         })
       );
-      // get the same uploader from the dom
       let image = document.getElementById("file");
-      // check if the file is there
       expect(image.files[0].name).toBe("chucknorris.png");
       expect(image.files.length).toBe(1);
       const form = screen.getByTestId("form-new-bill");
@@ -56,12 +53,7 @@ describe("Given I am connected as an employee", () => {
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page and create a new bill but the file is incorrect format", () => {
     test("Then it should show an alert", async () => {
-      const html = NewBillUI()
-      document.body.innerHTML = html
-      const onNavigate = (pathname) => {
-        document.body.innerHTML = ROUTES({ pathname })
-      }
-      const store = jest.fn();
+      document.body.innerHTML = NewBillUI()
       const inputExpenseType = screen.getByTestId("expense-type");
       inputExpenseType.getElementsByTagName('option')[0].selected = true;
       expect(inputExpenseType.value).toBe("Transports");
@@ -82,30 +74,25 @@ describe("Given I am connected as an employee", () => {
       const pct = screen.getByTestId("pct");
       fireEvent.change(pct, { target: { value: "20" } });
       expect(pct.value).toBe("20");
-      
       let file = new File([""], "chucknorris.jpg", { type: "image/png" });
-      // get the upload button
       let uploader = screen.getByTestId("file");
-      Object.defineProperty(window, 'localStorage', 
-      {value: {
-        getItem: jest.fn(),
-        setItem: jest.fn(),
-      },
-      })
-      window.localStorage.setItem('user', JSON.stringify({
-        email: "johndoe@email.com",
-        password: "azerty",
-      }))
       await waitFor(() =>
       fireEvent.change(uploader, {
-        target: { files: [file] },
-      })
-    );
+          target: { files: [file] },
+        })
+      );
       let image = document.getElementById("file");
       expect(image.files[0].name).toBe("chucknorris.jpg");
       expect(image.files.length).toBe(1);
+      window.localStorage.setItem('user', JSON.stringify({
+        email: "johndoe@email.com",
+      }))
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = jest.fn();
+      global.alert = jest.fn();
       const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
-      console.log(newBill.fileName);
       const handleChangeFile = jest.fn(newBill.handleChangeFile)
       uploader.addEventListener('change', handleChangeFile)
       file = new File([""], "chucknorris", { type: "image/png" });
@@ -113,13 +100,70 @@ describe("Given I am connected as an employee", () => {
       fireEvent.change(uploader, {
         target: { files: [file] },
       })
-    );
-      // check if the file is there
+      );
       expect(image.files[0].name).toBe("chucknorris");
       expect(image.files.length).toBe(1);
       expect(handleChangeFile).toHaveBeenCalled();
-/*       const alertMock = jest.spyOn(window,'alert').mockImplementation(); 
-      expect(alertMock).toHaveBeenCalledTimes(1); */
+      expect(global.alert).toBeCalledWith("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
+    })
+  })
+})
+
+describe("Given I am connected as an employee", () => {
+  describe("When I am on NewBill Page and create a new bill but the file is incorrect format", () => {
+    test("Then it should show an alert", async () => {
+      document.body.innerHTML = NewBillUI()
+      const inputExpenseType = screen.getByTestId("expense-type");
+      inputExpenseType.getElementsByTagName('option')[0].selected = true;
+      expect(inputExpenseType.value).toBe("Transports");
+      const datepicker = screen.getByTestId("datepicker");
+      fireEvent.mouseDown(datepicker);
+      fireEvent.change(datepicker, { target: { value: "2020-01-01" } });
+      fireEvent.click(datepicker)
+      expect(datepicker.value).toBe("2020-01-01");
+      const inputExpenseName = screen.getByTestId("expense-name");
+      fireEvent.change(inputExpenseName, { target: { value: "Vol Paris Londre" } });
+      expect(inputExpenseName.value).toBe("Vol Paris Londre");
+      const amount = screen.getByTestId("amount");
+      fireEvent.change(amount, { target: { value: "300" } });
+      expect(amount.value).toBe("300");
+      const vat = screen.getByTestId("vat");
+      fireEvent.change(vat, { target: { value: "70" } });
+      expect(vat.value).toBe("70");
+      const pct = screen.getByTestId("pct");
+      fireEvent.change(pct, { target: { value: "20" } });
+      expect(pct.value).toBe("20");
+      let file = new File([""], "chucknorris.jpg", { type: "image/png" });
+      let uploader = screen.getByTestId("file");
+      await waitFor(() =>
+      fireEvent.change(uploader, {
+          target: { files: [file] },
+        })
+      );
+      let image = document.getElementById("file");
+      expect(image.files[0].name).toBe("chucknorris.jpg");
+      expect(image.files.length).toBe(1);
+      window.localStorage.setItem('user', JSON.stringify({
+        email: "johndoe@email.com",
+      }))
+/*       Object.defineProperty(window, "localStorage", {
+        value: {
+          getItem: jest.fn(() => null),
+          setItem: jest.fn(() => null),
+        },
+        writable: true,
+      }); */
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({ pathname })
+      }
+      const store = jest.fn();
+      global.alert = jest.fn();
+      const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
+      const handleSubmit = jest.fn(newBill.handleSubmit)
+      const form = screen.getByTestId("form-new-bill");
+      form.addEventListener("submit", handleSubmit);
+      fireEvent.submit(form);
+      expect(handleSubmit).toHaveBeenCalled();
     })
   })
 })
