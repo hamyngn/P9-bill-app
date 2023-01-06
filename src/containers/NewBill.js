@@ -20,7 +20,7 @@ export default class NewBill {
     const file = this.document.querySelector(`input[data-testid="file"]`)
     const filePath = e.target.value.split(/\\/g)
     const fileName = filePath[filePath.length-1]
-    if (fileName.includes('.jpg')||fileName.includes('.png')||fileName.includes('.jpeg')){
+    if (fileName.endsWith('.jpg')||fileName.endsWith('.png')||fileName.endsWith('.jpeg')){
       const formData = new FormData()
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
@@ -42,6 +42,8 @@ export default class NewBill {
         }).catch(error => console.error(error))}
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
+      if (file) {
+        file.value = ""}
       return false;
     }
   }

@@ -99,6 +99,7 @@ describe("Given I am connected as an employee", () => {
       expect(image.files.length).toBe(1);
       expect(handleChangeFile).toHaveBeenCalled();
       expect(global.alert).toBeCalledWith("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
+      expect(image.value).toBe("");
     })
   })
 })
