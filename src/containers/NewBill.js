@@ -25,7 +25,7 @@ export default class NewBill {
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
       formData.append('email', email)
-  
+      if (this.store) {
       this.store
         .bills()
         .create({
@@ -39,7 +39,7 @@ export default class NewBill {
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
-        }).catch(error => console.error(error))
+        }).catch(error => console.error(error))}
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
       return false;
