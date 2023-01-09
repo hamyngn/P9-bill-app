@@ -87,7 +87,7 @@ export default class {
 
   handleEditTicket(e, bill, bills) { 
     if (this.id === undefined || this.id !== bill.id) this.id = bill.id
-    if (!$(`#open-bill${bill.id}`).hasClass("show") || $(`#open-bill${bill.id}`).hasClass("hide")) {
+    if (!$(`#open-bill${bill.id}`).hasClass("show")) {
       $(`#open-bill${bill.id}`).addClass("show")
       $(`#open-bill${bill.id}`).removeClass("hide")
       bills.forEach(b => {
@@ -148,9 +148,13 @@ export default class {
       $(`#status-bills-container${this.index}`)
         .html("")
     }
-    bills.forEach(bill => {
-      $(`#open-bill${bill.id}`).click((e) => this.handleEditTicket(e, bill, bills))
-    })
+    bills.forEach (bill =>       
+      $(`#open-bill${bill.id}`).unbind('click')
+    )
+    bills.forEach(bill =>
+      $(`#open-bill${bill.id}`).click((e) =>
+      this.handleEditTicket(e, bill, bills))
+    )
     return bills
   }
 
