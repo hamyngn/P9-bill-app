@@ -7,7 +7,8 @@ import NewBillUI from "../views/NewBillUI.js"
 import NewBill from "../containers/NewBill.js"
 import {localStorageMock} from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store"
-import { ROUTES } from "../constants/routes"
+import { ROUTES, ROUTES_PATH } from "../constants/routes"
+import router from "../app/Router.js";
 
 jest.mock("../app/store", () => mockStore)
 describe("Given I am connected as an employee", () => {
@@ -131,15 +132,8 @@ describe("Given I am connected as an employee", () => {
       
       Object.defineProperty(window, 'localStorage', { value: localStorageMock })
       window.localStorage.setItem('user', JSON.stringify({
-        email: "johndoe@email.com",
+        type: "Employee", email: "e@e" 
       }))
-/*       Object.defineProperty(window, "localStorage", {
-        value: {
-          getItem: jest.fn(() => null),
-          setItem: jest.fn(() => null),
-        },
-        writable: true,
-      }); */
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }

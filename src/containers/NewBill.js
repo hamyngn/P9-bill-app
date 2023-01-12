@@ -34,12 +34,13 @@ export default class NewBill {
             noContentType: true
           }
         })
-        .then(({fileUrl, key}) => {
+        /* .then(({fileUrl, key}) => {
           console.log(fileUrl)
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
-        }).catch(error => console.error(error))}
+          console.log(this.fileName)
+        }) */.catch(error => console.error(error))}
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
       if (file) {
