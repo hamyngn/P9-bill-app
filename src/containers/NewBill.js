@@ -15,17 +15,19 @@ export default class NewBill {
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
   }
+  
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`)
-    const filePath = e.target.value.split(/\\/g)
-    const fileName = filePath[filePath.length-1]
+    const file = this.document.getElementById('file')
+    if(file){
+      const fileName = file.files[0].name
     if (fileName.endsWith('.jpg')||fileName.endsWith('.png')||fileName.endsWith('.jpeg')){
       const formData = new FormData()
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
       formData.append('email', email)
       if (this.store) {
+        console.log(this.store.bills())
       this.store
         .bills()
         .create({
@@ -34,19 +36,18 @@ export default class NewBill {
             noContentType: true
           }
         })
-        /* .then(({fileUrl, key}) => {
-          console.log(fileUrl)
+        .then(({fileUrl, key}) => {
           this.billId = key
           this.fileUrl = fileUrl
           this.fileName = fileName
-          console.log(this.fileName)
-        }) */.catch(error => console.error(error))}
+        }).catch(error => console.error(error))}
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
       if (file) {
         file.value = ""}
       return false;
     }
+  }
   }
   handleSubmit = e => {
     e.preventDefault()

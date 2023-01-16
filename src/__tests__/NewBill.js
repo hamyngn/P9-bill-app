@@ -7,10 +7,10 @@ import NewBillUI from "../views/NewBillUI.js"
 import NewBill from "../containers/NewBill.js"
 import {localStorageMock} from "../__mocks__/localStorage.js";
 import mockStore from "../__mocks__/store"
-import { ROUTES, ROUTES_PATH } from "../constants/routes"
-import router from "../app/Router.js";
+import { ROUTES } from "../constants/routes"
 
 jest.mock("../app/store", () => mockStore)
+
 describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page and create a new bill but didn't fill input date and I click on Send button", () => {
     test("Then it should render NewBill page", async () => {
@@ -137,8 +137,8 @@ describe("Given I am connected as an employee", () => {
       const onNavigate = (pathname) => {
         document.body.innerHTML = ROUTES({ pathname })
       }
-      const store = null;
       let uploader = screen.getByTestId("file");
+      const store = mockStore;
       const newBill = new NewBill({document, onNavigate, store, localStorage: window.localStorage})
       const handleChangeFile = jest.fn(newBill.handleChangeFile);
       uploader.addEventListener("change", handleChangeFile)
