@@ -18,16 +18,17 @@ export default class NewBill {
   
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.getElementById('file')
+    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
     if(file){
-      const fileName = file.files[0].name
+      const fileName = file.name
+      console.log(fileName)
     if (fileName.endsWith('.jpg')||fileName.endsWith('.png')||fileName.endsWith('.jpeg')){
       const formData = new FormData()
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
-      formData.append('email', email)
+      //formData.append('email', email)
       if (this.store) {
-        console.log(this.store.bills())
+      console.log(this.store.bills().create())
       this.store
         .bills()
         .create({
@@ -43,8 +44,7 @@ export default class NewBill {
         }).catch(error => console.error(error))}
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
-      if (file) {
-        file.value = ""}
+      this.document.querySelector(`input[data-testid="file"]`).value = ""
       return false;
     }
   }
