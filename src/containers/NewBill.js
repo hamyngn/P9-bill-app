@@ -18,15 +18,15 @@ export default class NewBill {
   
   handleChangeFile = e => {
     e.preventDefault()
-    const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
-    if(file){
+    const fileInput = this.document.querySelector(`input[data-testid="file"]`)
+    if(fileInput){
+      const file = fileInput.files[0]
       const fileName = file.name
-      console.log(fileName)
     if (fileName.endsWith('.jpg')||fileName.endsWith('.png')||fileName.endsWith('.jpeg')){
       const formData = new FormData()
       const email = JSON.parse(localStorage.getItem("user")).email
       formData.append('file', file)
-      //formData.append('email', email)
+      formData.append('email', email)
       if (this.store) {
       console.log(this.store.bills().create())
       this.store
