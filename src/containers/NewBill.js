@@ -28,7 +28,6 @@ export default class NewBill {
       formData.append('file', file)
       formData.append('email', email)
       if (this.store) {
-      console.log(this.store.bills().create())
       this.store
         .bills()
         .create({
@@ -44,7 +43,7 @@ export default class NewBill {
         }).catch(error => console.error(error))}
     } else {
       alert("Uploaded file is not a valid image. Only JPG, PNG and JPEG files are allowed.");
-      this.document.querySelector(`input[data-testid="file"]`).value = ""
+      fileInput.value = ""
       return false;
     }
   }
