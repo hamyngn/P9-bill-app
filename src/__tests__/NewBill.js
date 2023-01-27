@@ -198,8 +198,14 @@ describe("Given I am connected as an employee", () => {
       const submit = document.getElementById("btn-send-bill")
       submit.click();
       await waitFor(() => screen.getByText("Mes notes de frais"))
-      const bills  = await screen.getByText("Mes notes de frais")
-      expect(bills).toBeTruthy()
+      const test1  = await screen.getByText("test1")
+      expect(test1).toBeTruthy()
+      const test2  = await screen.getByText("test2")
+      expect(test2).toBeTruthy()
+      const test3  = await screen.getByText("test3")
+      expect(test3).toBeTruthy()
+      const encore  = await screen.getByText("encore")
+      expect(encore).toBeTruthy()
     })
   describe("When an error occurs on API", () => {
     beforeEach(() => {
