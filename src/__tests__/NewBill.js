@@ -12,7 +12,100 @@ import router from "../app/Router"
 
 jest.mock("../app/store", () => mockStore)
 
-/* describe("Given I am connected as an employee", () => {
+// test d'intégration POST
+describe("Given I am connected as an employee", () => {
+  describe("When I am on NewBill Page and create a new bill in correct format then submit this form", () => {
+    test("adds a bill to mock API POST ", async () => {
+      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "e@e" }));
+      const root = document.createElement("div")
+      root.setAttribute("id", "root")
+      document.body.append(root)
+      router()
+      window.onNavigate(ROUTES_PATH.NewBill)
+      await waitFor(() => screen.getByText("Envoyer une note de frais"))
+      const inputExpenseType = screen.getByTestId("expense-type");
+      inputExpenseType.getElementsByTagName('option')[0].selected = true;    
+      const datepicker = screen.getByTestId("datepicker");
+      fireEvent.mouseDown(datepicker);
+      fireEvent.change(datepicker, { target: { value: "2020-01-01" } });
+      fireEvent.click(datepicker) 
+      const inputExpenseName = screen.getByTestId("expense-name");
+      fireEvent.change(inputExpenseName, { target: { value: "Vol Paris Londre" } }); 
+      const amount = screen.getByTestId("amount");
+      fireEvent.change(amount, { target: { value: "300" } });
+      const vat = screen.getByTestId("vat");
+      fireEvent.change(vat, { target: { value: "70" } });
+      const pct = screen.getByTestId("pct");
+      fireEvent.change(pct, { target: { value: "20" } }); 
+      const uploader = screen.getByTestId("file");
+      let file = new File([""], "chucknorris.png", { type: "image/png" });
+      await waitFor(() =>
+      fireEvent.change(uploader, {
+          target: { files: [file] },
+        })
+      );
+      const submit = document.getElementById("btn-send-bill")
+      submit.click();
+      await waitFor(() => screen.getByText("Mes notes de frais"))
+      const test1  = await screen.getByText("test1")
+      expect(test1).toBeTruthy()
+      const test2  = await screen.getByText("test2")
+      expect(test2).toBeTruthy()
+      const test3  = await screen.getByText("test3")
+      expect(test3).toBeTruthy()
+      const encore  = await screen.getByText("encore")
+      expect(encore).toBeTruthy()
+    })
+  describe("When an error occurs on API", () => {
+    beforeEach(() => {
+      jest.spyOn(mockStore, "bills")
+      Object.defineProperty(
+          window,
+          'localStorage',
+          { value: localStorageMock }
+      )
+      window.localStorage.setItem('user', JSON.stringify({
+        type: 'Employee',
+        email: "e@e"
+      }))
+      const root = document.createElement("div")
+      root.setAttribute("id", "root")
+      document.body.appendChild(root)
+      router()
+    })
+    test("adds a bill to an API and fails with 404 message error", async () => {
+
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          list : () =>  {
+            return Promise.reject(new Error("Erreur 404"))
+          }
+        }})
+      window.onNavigate(ROUTES_PATH.Bills)
+      await new Promise(process.nextTick);
+      const message = await screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy()
+    })
+
+    test("adds a bill to an API and fails with 500 message error", async () => {
+
+      mockStore.bills.mockImplementationOnce(() => {
+        return {
+          list : () =>  {
+            return Promise.reject(new Error("Erreur 500"))
+          }
+        }})
+
+      window.onNavigate(ROUTES_PATH.Bills)
+      await new Promise(process.nextTick);
+      const message = await screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    })
+  })
+  })
+})
+
+describe("Given I am connected as an employee", () => {
   describe("When I am on NewBill Page and create a new bill but didn't fill input date and I click on Send button", () => {
     test("Then it should render NewBill page", async () => {
       const html = NewBillUI()
@@ -160,98 +253,5 @@ describe("Given I am connected as an employee", () => {
       expect(handleSubmit).toHaveBeenCalled();
       expect(screen.getByTestId("tbody")).toBeTruthy();
     })
-  })
-}) */
-
-// test d'intégration POST
-describe("Given I am connected as an employee", () => {
-  describe("When I am on NewBill Page and create a new bill in correct format then submit this form", () => {
-    test("fetches bills from mock API POST ", async () => {
-      localStorage.setItem("user", JSON.stringify({ type: "Employee", email: "e@e" }));
-      const root = document.createElement("div")
-      root.setAttribute("id", "root")
-      document.body.append(root)
-      router()
-      window.onNavigate(ROUTES_PATH.NewBill)
-      await waitFor(() => screen.getByText("Envoyer une note de frais"))
-      const inputExpenseType = screen.getByTestId("expense-type");
-      inputExpenseType.getElementsByTagName('option')[0].selected = true;    
-      const datepicker = screen.getByTestId("datepicker");
-      fireEvent.mouseDown(datepicker);
-      fireEvent.change(datepicker, { target: { value: "2020-01-01" } });
-      fireEvent.click(datepicker) 
-      const inputExpenseName = screen.getByTestId("expense-name");
-      fireEvent.change(inputExpenseName, { target: { value: "Vol Paris Londre" } }); 
-      const amount = screen.getByTestId("amount");
-      fireEvent.change(amount, { target: { value: "300" } });
-      const vat = screen.getByTestId("vat");
-      fireEvent.change(vat, { target: { value: "70" } });
-      const pct = screen.getByTestId("pct");
-      fireEvent.change(pct, { target: { value: "20" } }); 
-      const uploader = screen.getByTestId("file");
-      let file = new File([""], "chucknorris.png", { type: "image/png" });
-      await waitFor(() =>
-      fireEvent.change(uploader, {
-          target: { files: [file] },
-        })
-      );
-      const submit = document.getElementById("btn-send-bill")
-      submit.click();
-      await waitFor(() => screen.getByText("Mes notes de frais"))
-      const test1  = await screen.getByText("test1")
-      expect(test1).toBeTruthy()
-      const test2  = await screen.getByText("test2")
-      expect(test2).toBeTruthy()
-      const test3  = await screen.getByText("test3")
-      expect(test3).toBeTruthy()
-      const encore  = await screen.getByText("encore")
-      expect(encore).toBeTruthy()
-    })
-  describe("When an error occurs on API", () => {
-    beforeEach(() => {
-      jest.spyOn(mockStore, "bills")
-      Object.defineProperty(
-          window,
-          'localStorage',
-          { value: localStorageMock }
-      )
-      window.localStorage.setItem('user', JSON.stringify({
-        type: 'Employee',
-        email: "e@e"
-      }))
-      const root = document.createElement("div")
-      root.setAttribute("id", "root")
-      document.body.appendChild(root)
-      router()
-    })
-    test("post a bill from an API and fails with 400 message error", async () => {
-
-      mockStore.bills.mockImplementationOnce(() => {
-        return {
-          list : () =>  {
-            return Promise.reject(new Error("Erreur 400"))
-          }
-        }})
-      window.onNavigate(ROUTES_PATH.Bills)
-      await new Promise(process.nextTick);
-      const message = await screen.getByText(/Erreur 400/)
-      expect(message).toBeTruthy()
-    })
-
-    test("post a bill from an API and fails with 500 message error", async () => {
-
-      mockStore.bills.mockImplementationOnce(() => {
-        return {
-          list : () =>  {
-            return Promise.reject(new Error("Erreur 500"))
-          }
-        }})
-
-      window.onNavigate(ROUTES_PATH.Bills)
-      await new Promise(process.nextTick);
-      const message = await screen.getByText(/Erreur 500/)
-      expect(message).toBeTruthy()
-    })
-  })
   })
 })
